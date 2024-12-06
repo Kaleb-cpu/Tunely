@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import BackButton from '../components/BackButton';
+import { useRouter } from 'expo-router';
 
-const LoginScreen = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter()
 
   const handleLogin = () => {
-    // Add your login logic here
-    console.log('Logging in with:', { email, password });
+    
+    router.push('/Home');
   };
 
   return (
@@ -81,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Login;
