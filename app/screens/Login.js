@@ -1,86 +1,68 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import BackButton from '../components/BackButton';
-import { useRouter } from 'expo-router';
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter()
-
-  const handleLogin = () => {
-    
-    router.push('/Home');
-  };
-
+const LoginScreen = ({ onLogin }) => {
   return (
-    <View style={styles.container}>
-      <BackButton />
-      <Text style={styles.title}>Log In</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Text style={styles.link}>Forgot Password?</Text>
-      </TouchableOpacity>
-    </View>
+    <ImageBackground
+      source={require("../assets/images/welcome.jpg")}
+      style={styles.background}
+    >
+      <View style={styles.contentContainer}>
+        {/* Create Account Button */}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Create an account</Text>
+        </TouchableOpacity>
+
+        {/* Log In Button */}
+        <TouchableOpacity
+          style={[styles.button, styles.loginButton]}
+          onPress={onLogin} // Update authentication state
+        >
+          <Text style={[styles.buttonText, styles.loginText]}>Log in</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#232327',
+    width: "100%",
+    height: "100%",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: 'white',
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
+  contentContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: 50,
   },
   button: {
-    backgroundColor: '#007bff',
+    width: "80%",
     paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
+    marginVertical: 10,
+    borderRadius: 25,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loginButton: {
+    backgroundColor: "black",
   },
   buttonText: {
-    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "black",
   },
-  link: {
-    color: '#007bff',
-    textAlign: 'center',
-    marginTop: 15,
+  loginText: {
+    color: "white",
   },
 });
 
-export default Login;
+export default LoginScreen;

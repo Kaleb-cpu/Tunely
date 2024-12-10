@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import BackButton from '../components/BackButton';
+// import BackButton from '../components/BackButton';
 
 const CreateAccountScreen = () => {
   const [name, setName] = useState('');

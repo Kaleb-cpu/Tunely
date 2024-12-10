@@ -1,73 +1,71 @@
-import React from "react";
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-import { Link } from "expo-router";
-import Navigation from "./components/Navigation";
+import React, { useState } from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
+// Screens
+import Home from "./screens/Home";
+import Search from "./screens/Search";
+import Library from "./screens/Library";
+import Profile from "./screens/Profile";
+import LoginScreen from "./screens/Login"; // Your login screen
+
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+// Main App Navigator (Tabs)
+const MainApp = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+
+        if (route.name === "Home") {
+          iconName = focused ? "home" : "home-outline";
+        } else if (route.name === "Search") {
+          iconName = focused ? "search" : "search-outline";
+        } else if (route.name === "Library") {
+          iconName = focused ? "library" : "library-outline";
+        } else if (route.name === "Profile") {
+          iconName = focused ? "person" : "person-outline";
+        }
+
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: "#007bff",
+      tabBarInactiveTintColor: "gray",
+      headerShown: false,
+    })}
+  >
+    <Tab.Screen name="Home" component={Home} />
+    <Tab.Screen name="Search" component={Search} />
+    <Tab.Screen name="Library" component={Library} />
+    <Tab.Screen name="Profile" component={Profile} />
+  </Tab.Navigator>
+);
+
+// App Component with Conditional Navigation
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track login state
+
   return (
     <>
-      <Navigation />
-      <ImageBackground
-        source={require("./assets/images/welcome.jpg")}
-        style={styles.background}
-      >
-        <View style={styles.contentContainer}>
-          {/* Buttons */}
-          <TouchableOpacity style={styles.button}>
-            <Link href="/screens/CreateAccountScreen">
-              <Text style={styles.buttonText}>Create an account</Text>
-            </Link>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.button, styles.loginButton]}>
-            <Link href="/screens/LoginScreen">
-              <Text style={[styles.buttonText, styles.loginText]}>Log in</Text>
-            </Link>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
+      {isAuthenticated ? (
+        // Show main app if authenticated
+        <MainApp />
+      ) : (
+        // Show login/welcome screen if not authenticated
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            options={{ headerShown: false }}
+          >
+            {() => <LoginScreen onLogin={() => setIsAuthenticated(true)} />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      )}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  contentContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginBottom: 50,
-  },
-  button: {
-    width: "80%",
-    paddingVertical: 15,
-    marginVertical: 10,
-    borderRadius: 25,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  loginButton: {
-    backgroundColor: "black",
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "black",
-  },
-  loginText: {
-    color: "white",
-  },
-});
 
 export default App;
