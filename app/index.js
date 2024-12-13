@@ -8,7 +8,9 @@ import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Library from "./screens/Library";
 import Profile from "./screens/Profile";
-import LoginScreen from "./screens/Login"; // Your login screen
+import Landing from "./screens/Landing"; // Landing screen for loggin in and creating an account
+import CreateAccount from "./screens/CreateAccount"; // Import Your Create Account Screen
+import LogIn from "./screens/LogIn"; // Import Your Log In Screen
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -46,22 +48,30 @@ const MainApp = () => (
 
 // App Component with Conditional Navigation
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track login state
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track login state
 
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true); // Set authentication state to true
+  };
   return (
     <>
       {isAuthenticated ? (
         // Show main app if authenticated
-        <MainApp />
+        <MainApp /> 
       ) : (
         // Show login/welcome screen if not authenticated
         <Stack.Navigator>
           <Stack.Screen
-            name="Login"
+            name="Signin"
             options={{ headerShown: false }}
           >
-            {() => <LoginScreen onLogin={() => setIsAuthenticated(true)} />}
+            {() => <Landing onLanding={() => setIsAuthenticated(false)} />}
           </Stack.Screen>
+          <Stack.Screen name="CreateAccount" component={CreateAccount} options={{ headerShown: true }} />
+          <Stack.Screen name="Login">
+            {(props) => <LogIn {...props} onLoginSuccess={handleLoginSuccess} />}
+          </Stack.Screen>
+
         </Stack.Navigator>
       )}
     </>
