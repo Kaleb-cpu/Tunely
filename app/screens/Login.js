@@ -10,20 +10,39 @@ const LoginScreen = ({onLoginSuccess}) => {
 
 
   
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Clear any previous error messages
     setErrorMessage('');
+    if (!email || !password) {
+      setErrorMessage('Email and password are required');
+      return;
+    }
 
-    if (email && password) {
-      
-      setErrorMessage('');
-      // On successful login, navigate to the next screen (e.g., Home or Dashboard)
-      onLoginSuccess();
-      navigation.navigate('Home'); // Replace with your screen name
-    } else {
-      setErrorMessage('Please enter both email and password.');
+    try {
+      const response = await fetch("http://10.0.0.177:3005/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        // On successful login
+        onLoginSuccess(result.user); // Pass user details if needed
+        navigation.navigate('Home'); // Navigate to the Home screen
+      } else {
+        // Handle errors (e.g., user not found or invalid password)
+        setErrorMessage(result.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Error during login:", error.message);
+      setErrorMessage("An error occurred. Please try again.");
     }
   };
+  
 
   return (
     <View style={styles.container}>

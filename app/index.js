@@ -10,7 +10,7 @@ import Library from "./screens/Library";
 import Profile from "./screens/Profile";
 import Landing from "./screens/Landing";
 import CreateAccount from "./screens/CreateAccount"; 
-import LogIn from "./screens/Login"; 
+import LogIn from "./screens/LogIn"; 
 
 
 const Tab = createBottomTabNavigator();
@@ -35,8 +35,8 @@ const MainApp = () => (
 
         return <Ionicons name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: "#007bff",
-      tabBarInactiveTintColor: "gray",
+      tabBarActiveTintColor: "#0095ff",
+      tabBarInactiveTintColor: "black",
       headerShown: false,
     })}
   >
@@ -49,7 +49,7 @@ const MainApp = () => (
 
 // App Component with Conditional Navigation
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track login state
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track login state
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true); // Set authentication state to true
