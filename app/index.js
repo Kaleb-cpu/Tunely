@@ -8,9 +8,10 @@ import Home from "./screens/Home";
 import Search from "./screens/Search";
 import Library from "./screens/Library";
 import Profile from "./screens/Profile";
-import Landing from "./screens/Landing"; // Landing screen for loggin in and creating an account
-import CreateAccount from "./screens/CreateAccount"; // Import Your Create Account Screen
-import LogIn from "./screens/LogIn"; // Import Your Log In Screen
+import Landing from "./screens/Landing";
+import CreateAccount from "./screens/CreateAccount"; 
+import LogIn from "./screens/Login"; 
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
