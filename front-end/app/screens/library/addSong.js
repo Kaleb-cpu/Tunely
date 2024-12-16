@@ -9,6 +9,8 @@ import {
   Platform,
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
+import { createFileFromBase64 } from "../../utils/fileUtils"; 
+
 
 // Function to handle platform-specific file URI formatting
 const getPlatformUri = (uri) => {
@@ -16,11 +18,10 @@ const getPlatformUri = (uri) => {
     return uri.replace("file://", ""); // Ensure proper URI format for web
   }
   if (Platform.OS === "android") {
-    return uri;  // For Android, it should work as is
+    return uri; // For Android, it should work as is
   }
   return uri.replace("file://", ""); // Handle for iOS (removes 'file://' prefix)
 };
-
 
 export default function AddSongScreen() {
   const [artist, setArtist] = useState("");
@@ -86,7 +87,32 @@ export default function AddSongScreen() {
     }
   };
 
-  // Function to upload song details
+  const formatReleaseDate = (releaseDate) => {
+    if (!releaseDate) return ""; // Ensure releaseDate is not empty
+
+    const dateParts = releaseDate.split("/");
+    if (dateParts.length === 3) {
+      const [month, day, year] = dateParts;
+
+      // Validate that day, month, and year are valid numbers
+      if (
+        !isNaN(month) &&
+        !isNaN(day) &&
+        !isNaN(year) &&
+        month > 0 &&
+        month <= 12 &&
+        day > 0 &&
+        day <= 31
+      ) {
+        return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      }
+    }
+
+    // If invalid, return an empty string or handle as per requirements
+    Alert.alert("Error", "Invalid release date format. Use MM/DD/YYYY.");
+    return "";
+  };
+
   const uploadSong = async () => {
     if (!artist || !title || !genre || !releaseDate || !songFile) {
       Alert.alert(
@@ -95,40 +121,68 @@ export default function AddSongScreen() {
       );
       return;
     }
-
+  
+    const formattedReleaseDate = formatReleaseDate(releaseDate);
     const formData = new FormData();
     formData.append("artist", artist);
     formData.append("title", title);
     formData.append("genre", genre);
-    formData.append("releaseDate", releaseDate);
-    formData.append("song", {
-      uri: getPlatformUri(songFile.uri),
-      name: songFile.name,
-      type: songFile.type,
-    });
-
+    formData.append("releaseDate", formattedReleaseDate);
+  
+    // Check if songFile is an object and has valid properties
+    if (songFile && songFile.uri && songFile.name && songFile.type) {
+      // If songFile URI contains base64 string
+      if (songFile.uri.startsWith("data:")) {
+        const response = await fetch(songFile.uri);  // Fetch the base64 data as a Blob
+        const blob = await response.blob();  // Convert the base64 string into a Blob
+  
+        // Now create a new file-like object for the Blob
+        const file = new File([blob], songFile.name, {
+          type: songFile.type,
+        });
+  
+        // Add the Blob (converted file) to FormData
+        formData.append("song", file);
+      } else {
+        // Handle non-base64 files as is
+        formData.append("song", {
+          uri: songFile.uri,
+          name: songFile.name,
+          type: songFile.type,
+        });
+      }
+  
+      console.log("Song File Object:", songFile); // Debugging
+    } else {
+      console.error("Invalid song file:", songFile);
+      Alert.alert("Error", "Invalid song file. Please select a valid file.");
+      return;
+    }
+  
+    // Optionally, handle cover image if it exists
     if (coverFile) {
       formData.append("cover", {
-        uri: getPlatformUri(coverFile.uri),
+        uri: coverFile.uri,
         name: coverFile.name,
         type: coverFile.type,
       });
     }
-
+  
+    // Log form data for debugging
     console.log("FormData before upload:");
     for (let pair of formData.entries()) {
       console.log(`${pair[0]}:`, pair[1]);
     }
-
+  
     try {
       const response = await fetch("http://10.0.0.177:3005/api/upload-song", {
         method: "POST",
         body: formData,
       });
-
+  
       const responseText = await response.text();
       console.log("Server Response:", responseText);
-
+  
       if (response.ok) {
         Alert.alert("Success", "Song uploaded successfully!");
         // Optionally, reset form fields
@@ -146,7 +200,8 @@ export default function AddSongScreen() {
       Alert.alert("Error", "Failed to upload the song. Please try again.");
     }
   };
-
+    
+  
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Add a New Song</Text>
@@ -173,7 +228,7 @@ export default function AddSongScreen() {
         onChangeText={setGenre}
       />
       <TextInput
-        placeholder="Release Date (mm/dd/yyyy)"
+        placeholder="Release Date (YYYY-MM-DD)"
         style={styles.input}
         placeholderTextColor="#aaa"
         value={releaseDate}
