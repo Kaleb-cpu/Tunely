@@ -1,8 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const db = require("../config/dbConfig"); // Adjust the path to your dbConfig file
-
+const db = require("../config/dbConfig"); 
 const fs = require("fs");
 const { release } = require("os");
 const uploadPath = path.join(__dirname, "../uploads");
@@ -34,7 +33,7 @@ router.post("/upload-song", upload.single("song"), async (req, res) => {
 
   const { title, artist, genre, releaseDate } = req.body;
 
-  const filePath = req.file ? req.file.path : null;
+  const filePath = req.file ? req.file.filename : null;
 
   if (!title || !filePath) {
     return res
@@ -61,5 +60,7 @@ router.post("/upload-song", upload.single("song"), async (req, res) => {
       .json({ message: "Failed to upload song. Please try again." });
   }
 });
+
+router.use("/uploads", express.static(uploadPath));
 
 module.exports = router;

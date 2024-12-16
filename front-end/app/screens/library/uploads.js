@@ -8,6 +8,14 @@ export default function UploadsScreen() {
     <View style={styles.container}>
       <Text style={styles.header}>Uploads</Text>
 
+      {/* Navigate to My Uploads Screen */}
+      <TouchableOpacity
+        onPress={() => router.push("/library/myUploads")}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>My Uploads</Text>
+      </TouchableOpacity>
+
       {/* Navigate to AddSongScreen */}
       <TouchableOpacity
         onPress={() => router.push("/library/addSong")}
@@ -16,7 +24,7 @@ export default function UploadsScreen() {
         <Text style={styles.buttonText}>Add a Song</Text>
       </TouchableOpacity>
 
-      {/* Navigate to a new screen for adding an album */}
+      {/* Navigate to AddAlbumScreen */}
       <TouchableOpacity
         onPress={() => router.push("/library/addAlbum")}
         style={styles.button}

@@ -17,7 +17,7 @@ export default function Search() {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:3005/api/songs/search?query=${searchQuery}`);
+      const response = await fetch(`http://10.0.0.177:3005/api/songs/search?query=${searchQuery}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -36,7 +36,7 @@ export default function Search() {
   const renderSongItem = ({ item }) => (
     <TouchableOpacity
       style={styles.songItem}
-      onPress={() => router.push(`/player?songId=${item.id}`)}  // Navigate to player with songId
+      onPress={() => router.push(`/player/${item.id}`)} 
     >
       <Text style={styles.songTitle}>{item.title}</Text>
       <Text style={styles.songArtist}>By: {item.artist}</Text>

@@ -46,18 +46,13 @@ const playSong = async (req, res) => {
     }
 
     const filePath = results[0].file_path;
-
-    // Send the file for playback
-    res.sendFile(path.resolve(filePath), (err) => {
-      if (err) {
-        console.error('Error sending file:', err);
-        res.status(500).json({ message: 'Error playing the song.' });
-      }
-    });
+    const songUrl = `http://10.0.0.177:3005/uploads/${encodeURIComponent(filePath.replace(/\\/g, "/"))}`;
+    res.status(200).json({ songUrl });
   } catch (error) {
     console.error('Error during song playback:', error.message);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
 
 module.exports = { searchSongs, playSong };

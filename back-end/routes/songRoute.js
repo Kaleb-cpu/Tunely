@@ -6,6 +6,9 @@ const { searchSongs, playSong } = require('../controllers/songController');
 router.get('/search', searchSongs);
 
 // Play a song by ID
-router.get('/play/:id', playSong);
+// Play a song by ID
+router.get("/api/songs/play/:id", playSong);
+
+
 
 module.exports = router;

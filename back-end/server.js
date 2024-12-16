@@ -6,7 +6,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const uploadsRoutes = require("./routes/uploads");
 const songRoutes = require('./routes/songRoute');
-
+const myuploadsRoute = require("./routes/myuploads"); 
 const app = express();
 const port = 3005;
 
@@ -99,6 +99,7 @@ app.post("/login", async (req, res) => {
 
 app.use("/api", uploadsRoutes);
 app.use('/api/songs', songRoutes);
+app.use(myuploadsRoute);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
