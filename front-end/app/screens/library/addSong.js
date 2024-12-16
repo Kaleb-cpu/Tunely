@@ -9,16 +9,16 @@ import {
   Platform,
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
-import { createFileFromBase64 } from "../../utils/fileUtils"; 
+
 
 
 // Function to handle platform-specific file URI formatting
 const getPlatformUri = (uri) => {
   if (Platform.OS === "web") {
-    return uri.replace("file://", ""); // Ensure proper URI format for web
+    return uri.replace("file://", ""); // For web, we handle it differently
   }
-  if (Platform.OS === "android") {
-    return uri; // For Android, it should work as is
+  if (Platform.OS === "android" || Platform.OS === "ios") {
+    return uri; // On Android/iOS, the URI is fine as is
   }
   return uri.replace("file://", ""); // Handle for iOS (removes 'file://' prefix)
 };
@@ -112,6 +112,7 @@ export default function AddSongScreen() {
     Alert.alert("Error", "Invalid release date format. Use MM/DD/YYYY.");
     return "";
   };
+  
 
   const uploadSong = async () => {
     if (!artist || !title || !genre || !releaseDate || !songFile) {
