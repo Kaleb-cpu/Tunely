@@ -9,21 +9,24 @@ import {
   Platform,
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
-
+import { useNavigation } from '@react-navigation/native'; // for navigation
 
 
 // Function to handle platform-specific file URI formatting
 const getPlatformUri = (uri) => {
   if (Platform.OS === "web") {
-    return uri.replace("file://", ""); // For web, we handle it differently
+    return uri.replace("file://", ""); 
   }
   if (Platform.OS === "android" || Platform.OS === "ios") {
-    return uri; // On Android/iOS, the URI is fine as is
+    return uri; 
   }
-  return uri.replace("file://", ""); // Handle for iOS (removes 'file://' prefix)
+  return uri.replace("file://", "");
 };
 
+
 export default function AddSongScreen() {
+
+  const navigation = useNavigation(); // Initialize navigation
   const [artist, setArtist] = useState("");
   const [title, setTitle] = useState("");
   const [genre, setGenre] = useState("");
@@ -115,6 +118,8 @@ export default function AddSongScreen() {
   
 
   const uploadSong = async () => {
+
+    
     if (!artist || !title || !genre || !releaseDate || !songFile) {
       Alert.alert(
         "Error",
@@ -168,7 +173,7 @@ export default function AddSongScreen() {
         type: coverFile.type,
       });
     }
-  
+   
     // Log form data for debugging
     console.log("FormData before upload:");
     for (let pair of formData.entries()) {
@@ -185,7 +190,8 @@ export default function AddSongScreen() {
       console.log("Server Response:", responseText);
   
       if (response.ok) {
-        Alert.alert("Success", "Song uploaded successfully!");
+        navigation.navigate("library/uploads"); // Redirect to Library screen
+        
         // Optionally, reset form fields
         setArtist("");
         setTitle("");
