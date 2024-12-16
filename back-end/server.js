@@ -5,12 +5,15 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const uploadsRoutes = require("./routes/uploads");
-const songRoutes = require('./routes/songRoute');
-const myuploadsRoute = require("./routes/myuploads"); 
+const songRoutes = require('./routes/songRoutes');
+const myuploadsRoute = require("./routes/myuploads");
+const path = require("path"); 
 const app = express();
 const port = 3005;
 
-app.use(cors());
+app.use(cors({
+  origin: '*' // Replace '*' with specific origin if needed (e.g., 'http://localhost:19006' for Expo)
+}));
 app.use(bodyParser.json());
 
 // Create Account Endpoint
@@ -100,6 +103,7 @@ app.post("/login", async (req, res) => {
 app.use("/api", uploadsRoutes);
 app.use('/api/songs', songRoutes);
 app.use(myuploadsRoute);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
