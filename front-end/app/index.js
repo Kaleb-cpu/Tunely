@@ -49,7 +49,7 @@ const MainApp = () => (
 
 // App Component with Conditional Navigation
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track login state
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track login state
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true); // Set authentication state to true
